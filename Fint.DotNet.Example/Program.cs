@@ -36,8 +36,8 @@ namespace Fint.DotNet.Example
                 var selfLink = links["self"].Single().Href;
                 var person = PersonFactory.create(firstObject);
                 
+                Console.WriteLine("Person: {0} {1}", person.Navn.Fornavn, person.Navn.Etternavn);
                 Console.WriteLine("Self link: " + selfLink);
-                Console.WriteLine("Person: " + person.Navn.Fornavn + " " + person.Navn.Etternavn);
             }
         }
     }
