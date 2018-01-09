@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using HalClient.Net;
@@ -32,12 +33,30 @@ namespace Fint.DotNet.Example
                 var links = response.Resource.Links;
                 var embedded = response.Resource.Embedded;
 
-                var firstObject = embedded["_entries"].First().State;
-                var selfLink = links["self"].Single().Href;
-                var person = PersonFactory.create(firstObject);
+                //var firstObject = embedded["_entries"].First().State;
+                IEnumerable<IEmbeddedResourceObject> allUnparsedPersons = embedded["_entries"].Take(10).AsEnumerable();
                 
-                Console.WriteLine("Person: {0} {1}", person.Navn.Fornavn, person.Navn.Etternavn);
-                Console.WriteLine("Self link: " + selfLink);
+
+                Console.WriteLine($"Listing Users....(First 10)");
+                Console.WriteLine();
+                
+                foreach (var entry in allUnparsedPersons)
+                {
+
+                var person = PersonFactory.create(entry.State);                    
+                
+                Console.WriteLine($"Navn: {person.Navn.Fornavn} {person.Navn.Etternavn}");
+                Console.WriteLine($"E-Post: {person.Kontaktinformasjon.Epostadresse}");
+                Console.WriteLine($"Addresse: {person.Bostedsadresse.Adresselinje[0]},{person.Bostedsadresse.Postnummer} {person.Bostedsadresse.Poststed} ");
+                Console.WriteLine();
+
+                }
+
+                var selfLink = links["self"].Single().Href;
+                //var person = PersonFactory.create(firstObject);
+                
+                //Console.WriteLine("Person: {0} {1}", person.Navn.Fornavn, person.Navn.Etternavn);
+                //Console.WriteLine("Self link: " + selfLink);
             }
         }
     }
